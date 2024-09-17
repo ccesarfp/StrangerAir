@@ -26,4 +26,4 @@ watch:
         fi
 
 
-.PHONY: all run test clean watchi
+.PHONY: all run-api test clean watch
