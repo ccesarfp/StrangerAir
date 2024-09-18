@@ -1,0 +1,25 @@
+services:
+  app:
+    build:
+      context: ../../
+      dockerfile: ../prod/Dockerfile
+    container_name: strange-air
+    ports:
+      - "8000:8000"
+    networks:
+      - strange-net
+    volumes:
+      - ../../:/var/www
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 512M
+        reservations:
+          cpus: '0.25'
+          memory: 64M
+
+networks:
+  strange-net:
+    name: strange-net
+    driver: bridge

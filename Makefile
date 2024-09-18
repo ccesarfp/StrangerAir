@@ -1,13 +1,26 @@
-all: run-api
+all: dev-up
+
+prod-up:
+	@echo "Starting..."
+	@docker-compose -f docker/prod/compose.yaml up -d
+
+prod-down:
+	@echo "Stopping..."
+	@docker-compose -f docker/prod/compose.yaml down
+
+dev-up:
+	@echo "Starting dev environment..."
+	@docker-compose -f docker/dev/compose.yaml up
+
+dev-down:
+	@echo "Stopping dev environment..."
+	@docker-compose -f docker/dev/compose.yaml down
+
+dev-access:
+	@docker-compose -f docker/dev/compose.yaml exec -ti app /bin/sh
 
 run-api:
 	@go run cmd/api/*.go
-
-test:
-	@go test ./... -v
-
-clean:
-	@rm -f main
 
 watch:
 	@if command -v air > /dev/null; then \
@@ -25,5 +38,10 @@ watch:
             fi; \
         fi
 
+test:
+	@go test ./... -v
 
-.PHONY: all run-api test clean watch
+clean:
+	@rm -f main
+
+.PHONY: all prod-up prod-down dev-up dev-down dev-access run-api test clean watch
