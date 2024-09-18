@@ -2,7 +2,7 @@ all: dev-up
 
 prod-up:
 	@echo "Starting..."
-	@docker-compose -f docker/prod/compose.yaml up -d
+	@docker-compose -f docker/prod/compose.yaml up
 
 prod-down:
 	@echo "Stopping..."

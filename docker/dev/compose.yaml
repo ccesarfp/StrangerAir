@@ -2,24 +2,31 @@ services:
   app:
     build:
       context: ../../
-      dockerfile: ../dev/Dockerfile
+      dockerfile: docker/dev/Dockerfile
     container_name: strange-air-dev
+    environment:
+      GO_ENV: "development"
+      LOG_LEVEL: "debug"
     ports:
       - "8000:8000"
     networks:
       - strange-net
     volumes:
       - ../../:/var/www
+      - go-mod:/go/pkg/mod
     deploy:
       resources:
         limits:
-          cpus: '2'
+          cpus: '1'
           memory: 512M
         reservations:
           cpus: '0.25'
-          memory: 64M
+          memory: 128M
 
 networks:
   strange-net:
     name: strange-net-dev
     driver: bridge
+
+volumes:
+  go-mod:

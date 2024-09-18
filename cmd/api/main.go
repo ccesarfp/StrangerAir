@@ -17,6 +17,7 @@ func main() {
 	}
 
 	log.Printf("Application initialization took %s", server.GetLifeTime())
+	log.Printf("Server started on port: %s", viper.GetString("SERVER_PORT"))
 
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", viper.GetString("SERVER_PORT")), nil))
 }
