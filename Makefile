@@ -1,23 +1,25 @@
+devFile = "compose.dev.yaml"
+
 all: dev-up
 
 prod-up:
 	@echo "Starting..."
-	@docker-compose -f compose.prod.yaml up
+	@docker-compose up
 
 prod-down:
 	@echo "Stopping..."
-	@docker-compose -f compose.prod.yaml down
+	@docker-compose down
 
 dev-up:
 	@echo "Starting dev environment..."
-	@docker-compose -f compose.dev.yaml up
+	@docker-compose -f ${devFile} up
 
 dev-down:
 	@echo "Stopping dev environment..."
-	@docker-compose -f compose.dev.yaml down
+	@docker-compose -f ${devFile} down
 
 dev-access:
-	@docker-compose -f compose.dev.yaml exec -ti app /bin/sh
+	@docker-compose -f ${devFile} exec -ti app /bin/sh
 
 run-api:
 	@go run cmd/api/*.go

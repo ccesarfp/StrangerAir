@@ -7,4 +7,4 @@ README.md
 .idea
 Makefile
 compose.dev.yaml
-compose.prod.yaml
+compose.yaml
