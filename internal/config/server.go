@@ -19,14 +19,17 @@ func NewServer() *Server {
 
 // LoadEnv loads environment variables from the .env file and system environment variables.
 func (s *Server) LoadEnv() error {
-	viper.SetConfigFile(".env")
-	viper.AddConfigPath(".")
-	viper.SetConfigType("env")
-
+	viper.SetEnvPrefix("APP")
 	viper.AutomaticEnv()
 
-	if err := viper.ReadInConfig(); err != nil {
-		return err
+	if viper.GetString("ENV_FILE") != "false" {
+		viper.SetConfigFile(".env")
+		viper.AddConfigPath(".")
+		viper.SetConfigType("env")
+
+		if err := viper.ReadInConfig(); err != nil {
+			return err
+		}
 	}
 
 	return nil

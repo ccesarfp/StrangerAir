@@ -3,4 +3,8 @@
 .env.example
 LICENSE
 README.md
-docker
+.docker
+.idea
+Makefile
+compose.dev.yaml
+compose.prod.yaml

@@ -2,22 +2,22 @@ all: dev-up
 
 prod-up:
 	@echo "Starting..."
-	@docker-compose -f docker/prod/compose.yaml up
+	@docker-compose -f compose.prod.yaml up
 
 prod-down:
 	@echo "Stopping..."
-	@docker-compose -f docker/prod/compose.yaml down
+	@docker-compose -f compose.prod.yaml down
 
 dev-up:
 	@echo "Starting dev environment..."
-	@docker-compose -f docker/dev/compose.yaml up
+	@docker-compose -f compose.dev.yaml up
 
 dev-down:
 	@echo "Stopping dev environment..."
-	@docker-compose -f docker/dev/compose.yaml down
+	@docker-compose -f compose.dev.yaml down
 
 dev-access:
-	@docker-compose -f docker/dev/compose.yaml exec -ti app /bin/sh
+	@docker-compose -f compose.dev.yaml exec -ti app /bin/sh
 
 run-api:
 	@go run cmd/api/*.go
