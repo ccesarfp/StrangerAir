@@ -11,11 +11,11 @@ func main() {
 
 	err := server.LoadEnv()
 	if err != nil {
-		log.Fatalf("Error reading config file. Message Error: %s", err)
+		log.Panicf("Error reading config file. Message Error: %s\n", err)
 	}
 
 	log.Printf("Application initialization took %s", server.GetLifeTime())
 	log.Printf("Server started on port: %s", viper.GetString("SERVER_PORT"))
 
-	log.Fatal(server.Up())
+	log.Panicln(server.Up())
 }
