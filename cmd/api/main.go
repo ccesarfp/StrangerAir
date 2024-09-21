@@ -2,12 +2,15 @@ package main
 
 import (
 	"ccesarfp.com/StrangerAir/internal/config"
+	router "ccesarfp.com/StrangerAir/internal/routes"
 	"github.com/spf13/viper"
 	"log"
 )
 
 func main() {
 	server := config.NewServer()
+
+	server.RegisterRoutes(router.CreateRoutes())
 
 	err := server.LoadEnv()
 	if err != nil {

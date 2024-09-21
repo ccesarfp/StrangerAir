@@ -1,6 +1,7 @@
 package config
 
 import (
+	router "ccesarfp.com/StrangerAir/internal/routes"
 	"fmt"
 	"github.com/spf13/viper"
 	"net/http"
@@ -37,6 +38,17 @@ func (s *Server) LoadEnv() error {
 	}
 
 	return nil
+}
+
+// RegisterRoutes - register routes in the multiplexer
+func (s *Server) RegisterRoutes(routeGroups []map[string]map[string]router.Route) {
+	for _, routeGroup := range routeGroups {
+		for prefix, routes := range routeGroup {
+			for path, route := range routes {
+				s.mux.HandleFunc(fmt.Sprintf("%s /%s%s", route.Method, prefix, path), route.Handler)
+			}
+		}
+	}
 }
 
 // Up - start server and assign routes
