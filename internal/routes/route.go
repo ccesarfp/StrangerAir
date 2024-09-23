@@ -8,9 +8,9 @@ type Route struct {
 }
 
 func CreateRoutes() (routesGroups []map[string]map[string]Route) {
-	routesGroups = []map[string]map[string]Route{}
-
-	routesGroups = append(routesGroups, createAirQualityRoutes())
+	routesGroups = []map[string]map[string]Route{
+		createAirQualityRoutes(),
+	}
 
 	return routesGroups
 }
