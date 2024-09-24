@@ -9,6 +9,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"testing"
+	"time"
 )
 
 func TestNewServer(t *testing.T) {
@@ -142,6 +143,27 @@ func TestServer_Up(t *testing.T) {
 
 	t.Run("Should return an error when server port is not set and server cannot start", func(t *testing.T) {
 		_ = server.LoadEnv()
+
+		err := server.Up()
+		if err == nil {
+			t.Fatalf("Expected error to be non nil, but got nil")
+		}
+	})
+
+	t.Run("Should return an error when server port is already in use", func(t *testing.T) {
+		_ = os.Setenv("APP_ENV_FILE", "false")
+		defer func() {
+			_ = os.Unsetenv("APP_ENV_FILE")
+		}()
+		_ = os.Setenv("APP_SERVER_PORT", "8000")
+		defer func() {
+			_ = os.Unsetenv("APP_SERVER_PORT")
+		}()
+		_ = server.LoadEnv()
+
+		go server.Up()
+
+		time.Sleep(1 * time.Second)
 
 		err := server.Up()
 		if err == nil {

@@ -59,11 +59,7 @@ func (s *Server) Up() error {
 		return errors.New("server port not set")
 	}
 
-	err := http.ListenAndServe(fmt.Sprintf(":%s", serverPort), s.mux)
-	if err != nil {
-		return err
-	}
-	return nil
+	return http.ListenAndServe(fmt.Sprintf(":%s", serverPort), s.mux)
 }
 
 // GetLifeTime - returns the duration of time elapsed since the server was started.
