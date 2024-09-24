@@ -136,6 +136,25 @@ func TestServer_RegisterRoutes(t *testing.T) {
 			t.Errorf("Expected body to be: %s, but got: %s", rr.Body.String(), expected)
 		}
 	})
+
+	t.Run("Should return error when route is duplicated", func(t *testing.T) {
+		routeGroups := []map[string]map[string]router.Route{
+			{
+				"test": {
+					"/get": router.Route{Method: methods.POST, Handler: func(w http.ResponseWriter, r *http.Request) {
+						w.WriteHeader(http.StatusOK)
+						_, _ = fmt.Fprintf(w, expected)
+					}},
+				},
+			},
+		}
+
+		err := server.RegisterRoutes(routeGroups)
+		err = server.RegisterRoutes(routeGroups)
+		if err == nil {
+			t.Errorf("Expected error when registering duplicated route, but got nothing")
+		}
+	})
 }
 
 func TestServer_Up(t *testing.T) {
