@@ -1,8 +1,11 @@
 package config
 
 import (
+	router "ccesarfp.com/StrangerAir/internal/routes"
+	"errors"
 	"fmt"
 	"github.com/spf13/viper"
+	"log"
 	"net/http"
 	"time"
 )
@@ -39,16 +42,42 @@ func (s *Server) LoadEnv() error {
 	return nil
 }
 
+// RegisterRoutes - register routes in the multiplexer
+func (s *Server) RegisterRoutes(routeGroups []map[string]map[string]router.Route) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("Recovered from panic while registering routes: %v", r)
+			err = errors.New(fmt.Sprintf("panic occurred: %v", r))
+		}
+	}()
+
+	for _, routeGroup := range routeGroups {
+		for prefix, routes := range routeGroup {
+			for path, route := range routes {
+				fullPath := fmt.Sprintf("%s /%s%s", route.Method, prefix, path)
+				log.Printf("Registering route: %s", fullPath)
+				s.mux.HandleFunc(fullPath, route.Handler)
+			}
+		}
+	}
+
+	return nil
+}
+
 // Up - start server and assign routes
 func (s *Server) Up() error {
-	err := http.ListenAndServe(fmt.Sprintf(":%s", viper.GetString("SERVER_PORT")), s.mux)
-	if err != nil {
-		return err
+	serverPort := viper.GetString("SERVER_PORT")
+	if serverPort == "" {
+		return errors.New("server port not set")
 	}
-	return nil
+
+	return http.ListenAndServe(fmt.Sprintf(":%s", serverPort), s.mux)
 }
 
 // GetLifeTime - returns the duration of time elapsed since the server was started.
 func (s *Server) GetLifeTime() time.Duration {
+	if s.StartedAt.IsZero() {
+		return 0
+	}
 	return time.Since(s.StartedAt)
 }
