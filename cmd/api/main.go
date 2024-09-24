@@ -10,9 +10,12 @@ import (
 func main() {
 	server := config.NewServer()
 
-	server.RegisterRoutes(router.CreateRoutes())
+	err := server.RegisterRoutes(router.CreateRoutes())
+	if err != nil {
+		log.Panicf("Duplicate route. Message Error: %s\n", err)
+	}
 
-	err := server.LoadEnv()
+	err = server.LoadEnv()
 	if err != nil {
 		log.Panicf("Error reading config file. Message Error: %s\n", err)
 	}

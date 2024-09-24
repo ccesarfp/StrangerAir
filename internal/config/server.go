@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/spf13/viper"
+	"log"
 	"net/http"
 	"time"
 )
@@ -42,14 +43,25 @@ func (s *Server) LoadEnv() error {
 }
 
 // RegisterRoutes - register routes in the multiplexer
-func (s *Server) RegisterRoutes(routeGroups []map[string]map[string]router.Route) {
+func (s *Server) RegisterRoutes(routeGroups []map[string]map[string]router.Route) (err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("Recovered from panic while registering routes: %v", r)
+			err = errors.New(fmt.Sprintf("panic occurred: %v", r))
+		}
+	}()
+
 	for _, routeGroup := range routeGroups {
 		for prefix, routes := range routeGroup {
 			for path, route := range routes {
-				s.mux.HandleFunc(fmt.Sprintf("%s /%s%s", route.Method, prefix, path), route.Handler)
+				fullPath := fmt.Sprintf("%s /%s%s", route.Method, prefix, path)
+				log.Printf("Registering route: %s", fullPath)
+				s.mux.HandleFunc(fullPath, route.Handler)
 			}
 		}
 	}
+
+	return nil
 }
 
 // Up - start server and assign routes
